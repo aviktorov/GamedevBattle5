@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*
  */
@@ -83,33 +84,35 @@ public class Castle : MonoBehaviour {
 		return (cachedTileMap.GetTile(x,y,2) != -1);
 	}
 	
-	// private bool FindPath(Vector2 thief,Vector2 sheep,Queue<Vector3> path) {
-	// 	path.clear();
-	// 	if(thief == sheep) return true;
+	private bool FindPath(Vector2 thief,Vector2 sheep,Queue<Vector3> path) {
+		path.Clear();
+		if(thief == sheep) return true;
 		
-	// 	List<Vector3> visited_nodes = new List<Vector3>();
+		List<Vector3> visited_nodes = new List<Vector3>();
 		
-	// 	path.Add(new Vector3(thief.x,thief.y,0));
+		path.Enqueue(new Vector3(thief.x,thief.y,0));
 		
-	// 	while(!path.IsEmpty() || path.Peek() != sheep) {
-	// 		Vector3 node = path.Dequeue();
-	// 		visited_nodes.Add(node);
+		while(path.Count != 0) {
 			
-	// 		Vector3 left = new Vector3(node.x - 1,node.y,node.z + 1);
-	// 		Vector3 right = new Vector3(node.x + 1,node.y,node.z + 1);
-	// 		Vector3 top = new Vector3(node.x,node.y - 1,node.z + 1);
-	// 		Vector3 bottom = new Vector3(node.x,node.y + 1,node.z + 1);
+			Vector3 node = path.Dequeue();
+			visited_nodes.Add(node);
 			
-	// 		if(!IsBlock(left.x,left.y) && !visited_nodes.Contains(left)) path.Enqueue(left);
-	// 		if(!IsBlock(right.x,right.y) && !visited_nodes.Contains(right)) path.Enqueue(right);
-	// 		if(!IsBlock(top.x,top.y) && !visited_nodes.Contains(top)) path.Enqueue(top);
-	// 		if(!IsBlock(bottom.x,bottom.y) && !visited_nodes.Contains(bottom)) path.Enqueue(bottom);
-	// 	}
+			if(node.x == sheep.x && node.y == sheep.y) break;
+			
+			Vector3 left = new Vector3(node.x - 1,node.y,node.z + 1);
+			Vector3 right = new Vector3(node.x + 1,node.y,node.z + 1);
+			Vector3 top = new Vector3(node.x,node.y - 1,node.z + 1);
+			Vector3 bottom = new Vector3(node.x,node.y + 1,node.z + 1);
+			
+			if(!IsBlock((int)left.x,(int)left.y) && !visited_nodes.Contains(left)) path.Enqueue(left);
+			if(!IsBlock((int)right.x,(int)right.y) && !visited_nodes.Contains(right)) path.Enqueue(right);
+			if(!IsBlock((int)top.x,(int)top.y) && !visited_nodes.Contains(top)) path.Enqueue(top);
+			if(!IsBlock((int)bottom.x,(int)bottom.y) && !visited_nodes.Contains(bottom)) path.Enqueue(bottom);
+		}
 		
-	// 	if(path.IsEmpty()) return false;
-		
-	// 	// TODO restore path
-	// }
+		// TODO restore path
+		return false;
+	}
 	
 	private GameObject GetEntityAtTile(int x,int y,GameObject[] collection) {
 		foreach(GameObject obj in collection) {
